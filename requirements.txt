@@ -1,0 +1,7 @@
+click==6.7
+coreapi==2.3.3
+Django==2.0
+djangorestframework==3.7.3
+psycopg2==2.7.3.2
+requests==2.18.4
+nameparser==0.5.4

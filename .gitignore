@@ -78,6 +78,8 @@ target/
 # celery beat schedule file
 celerybeat-schedule
 
+*.pid
+
 # SageMath parsed files
 *.sage.py
 
@@ -104,3 +106,6 @@ venv.bak/
 .mypy_cache/
 
 db.sqlite3
+
+.DS_Store
+staticfiles
