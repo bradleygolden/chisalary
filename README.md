@@ -1,8 +1,9 @@
 # chisalary
 
-chisalary is a simple web server that syncs with Chicago's Open Data platform
-containing employee salary information. The web server was created using the
+chisalary is a simple web server that syncs with Chicago's employee salary database. The web server was created using the
 Django framework and is written in python.
+
+I'd recommend checking out the dataset [here](https://data.cityofchicago.org/Administration-Finance/Current-Employee-Names-Salaries-and-Position-Title/xzkq-xp2w/data) before getting started.
 
 ## Getting Started
 
@@ -92,4 +93,4 @@ docker-compose run web python manage.py test
     * Travis CI is a great choice for this
 - [ ] Add CD job for deploying code to a remote a server
     * Any docker based platform like kubernetes would be easy. Heroku would be a great option as well.
-- [ ] Add filtering options through uri parameters to make querying the database simple
+- [ ] Add filtering options through uri parameters to make querying the database simple. For example, ?name=John or ?salary=gt>50000
