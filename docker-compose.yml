@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+  web:
+    build:
+      context: .
+      dockerfile: tools/docker/Dockerfile
+    environment:
+      SECRET_KEY: very-secret-key
+      ALLOWED_HOSTS: '*'
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: db
+      APP_TOKEN: $APP_TOKEN
+      ADMIN_USERNAME: admin
+      ADMIN_EMAIL: admin@admin.com
+      ADMIN_PASSWORD: password123
+      DOCKER: 'true'
+    command: >
+      bash -c "sleep 10 &&
+               ./manage.py collectstatic --noinput &&
+               ./manage.py makemigrations api &&
+               ./manage.py migrate &&
+               # echo \"from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@admin.com', 'password123')\" | ./manage.py shell &&
+               ./manage.py download_employees --limit 100 &&
+               ./manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./chisalary:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
