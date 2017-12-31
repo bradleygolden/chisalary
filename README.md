@@ -1,6 +1,7 @@
 # chisalary
 
 [![Build Status](https://travis-ci.org/bradleygolden/chisalary.svg?branch=master)](https://travis-ci.org/bradleygolden/chisalary)
+[![Coverage Status](https://coveralls.io/repos/github/bradleygolden/chisalary/badge.svg?branch=master)](https://coveralls.io/github/bradleygolden/chisalary?branch=master)
 
 chisalary is a simple web server that syncs with Chicago's employee salary database. The web server was created using the
 Django framework and is written in python.
