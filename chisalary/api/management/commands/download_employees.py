@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from api.manager import EmployeeManager
+from api.manager import EmployeesManager
 
 
 class Command(BaseCommand):
@@ -13,11 +13,11 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        employee_manager = EmployeeManager()
+        employees_manager = EmployeesManager()
         limit = options.get('limit')
 
         if not limit:
-            limit = employee_manager.count()
+            limit = employees_manager.count()
         self.stdout.write(self.style.SUCCESS(f'Downloading "{limit}" employees.'))
-        EmployeeManager().sync_employees(limit=limit, progress_bar=True)
+        employees_manager.sync_employees(limit=limit, progress_bar=True)
         self.stdout.write(self.style.SUCCESS(f'Successfully downloaded "{limit}" employees.'))
