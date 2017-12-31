@@ -1,8 +1,11 @@
+from decimal import Decimal
 from django.test import TestCase
-from rest_framework.test import APIClient
+from django.utils.http import urlencode
+from rest_framework.reverse import reverse
+from rest_framework.test import APITestCase
+from rest_framework import status
 from .manager import EmployeeManager, EmployeesManager
 from .models import Employee
-from decimal import Decimal
 
 
 dirty_test_employees = [
@@ -99,7 +102,7 @@ class EmployeeManagerTestCase(TestCase):
 
 class EmployeesManagerTestCase(TestCase):
 
-    def test_sync_employees_with_predefined_employees(self):
+    def test_sync_employees_with_prepopulated_employees(self):
         employees_manager = EmployeesManager()
         employees_manager.sync_employees(employees=clean_test_employees, progress_bar=False)
 
@@ -121,3 +124,49 @@ class EmployeesManagerTestCase(TestCase):
                 self.assertEqual(employee.annual_salary, clean_test_employees[i]['annual_salary'])
             if 'hourly_rate' in clean_test_employees[i]:
                 self.assertEqual(employee.hourly_rate, clean_test_employees[i]['hourly_rate'])
+
+
+class EmployeeAPITestCase(APITestCase):
+
+    def create_employees(self):
+        employees_manager = EmployeesManager()
+        employees_manager.sync_employees(employees=clean_test_employees, progress_bar=False)
+
+    def test_retrieve_employees_list(self):
+        self.create_employees()
+        url = reverse('employee-list')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
+        self.assertEqual(response.data['results'][0]['first_name'], 'AZIZ')
+        self.assertEqual(response.data['results'][1]['first_name'], 'DEBRA')
+
+    def test_retrieve_employee_detail(self):
+        self.create_employees()
+        employee_id = 1
+        url = reverse('employee-detail', args=[employee_id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['first_name'], 'AZIZ')
+
+    def test_search_employees_by_first_name(self):
+        self.create_employees()
+        base_url = reverse('employee-list')
+        search_by_first_name = urlencode({'search': 'DEB', 'filter': 'first_name'})
+        url = f'{base_url}?{search_by_first_name}'
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['results'][0]['first_name'], 'DEBRA')
+
+    def test_search_employees_by_min_annual_salary(self):
+        self.fail("TODO Test incomplete")
+
+    def test_search_employees_by_max_annual_salary(self):
+        self.fail("TODO Test incomplete")
+
+    def test_search_employees_by_min_hourly_rate(self):
+        self.fail("TODO Test incomplete")
+
+    def test_search_employees_by_max_hourly_rate(self):
+        self.fail("TODO Test incomplete")
