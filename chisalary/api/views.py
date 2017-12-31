@@ -4,7 +4,7 @@ from .filters import EmployeeFilter
 from .serializers import EmployeeSerializer
 
 
-class EmployeeViewSet(viewsets.ModelViewSet):
+class EmployeeViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     filter_class = EmployeeFilter

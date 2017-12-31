@@ -75,25 +75,30 @@ docker-compose up
 
 After running this command, wait about 20-30 seconds after the images have been built and the server should start up.
 
+#### Make
+
+I've alao added a few make commands:
+```
+make test # run tests
+make run # run dev server
+make clean # clean up some junk files
+```
+
 ## Running Tests
 
 After following the [Getting Started](#Getting Started) instructions, you can run unit tests with the following command:
 ```
-python manage.py test
-```
-
-#### Docker
-Alternatively you can use docker:
-```
-docker-compose run web python manage.py test
+coverage run --source=. chisalary/manage.py test api --noinput
 ```
 
 ## TODO
 
 - [ ] Add asynchronous task queue
     * This is for syncing with the Chicago Data Portal at periodic intervals. This can be done with celery and redis.
-- [ ] Add CI job for testing code on commit
+- [x] Add CI job for testing code on commit
     * Travis CI is a great choice for this
 - [ ] Add CD job for deploying code to a remote a server
     * Any docker based platform like kubernetes would be easy. Heroku would be a great option as well.
-- [ ] Add filtering options through uri parameters to make querying the database simple. For example, ?name=John or ?salary=gt>50000
+- [x] Add filtering options through uri parameters to make querying the database simple.
+- [ ] Add a pretty UI
+- [ ] Covert to pip installable package

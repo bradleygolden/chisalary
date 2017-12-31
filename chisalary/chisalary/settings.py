@@ -8,13 +8,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY', 'secret key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = os.environ.get('DEBUG', False)
 DOCKER = bool(os.environ.get('DOCKER'))
 
 # Allowed hosts that this webserver is running on
-if DEBUG:
-    ALLOWED_HOSTS = ['*']
-else:
+if not DEBUG:
     ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
 
@@ -82,6 +80,13 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
         ),
 }
+
+
+# Disable Browsable API for Production
+if not DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
+        'rest_framework.renderers.JSONRenderer',
+    )
 
 # Database
 

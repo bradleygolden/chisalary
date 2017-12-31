@@ -1,4 +1,5 @@
 from django.db import models
+from nameparser import HumanName
 
 
 class Employee(models.Model):
@@ -12,3 +13,10 @@ class Employee(models.Model):
     typical_hours = models.IntegerField(null=True)
     annual_salary = models.IntegerField(null=True)
     hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+
+    def full_name(self):
+        name = '{} {} {}'.format(self.first_name, self.middle_name, self.last_name)
+        return str(HumanName(name))
+
+    def __str__(self):
+        return self.full_name()
