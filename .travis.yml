@@ -1,0 +1,14 @@
+language: python
+python:
+  - "3.6"
+
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
+  - coverage run --source=. chisalary/manage.py test api --noinput
+
+after_success:
+    - coveralls
+
+script:
+  - python chisalary/manage.py test api -v 2

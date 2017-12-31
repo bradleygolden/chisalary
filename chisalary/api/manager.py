@@ -11,6 +11,33 @@ logger = logging.getLogger(__name__)
 
 class EmployeeManager:
 
+    def __init__(self, employee):
+        self.employee = employee
+
+    def clean_name(self):
+        name = HumanName(self.employee.get('name'))
+        self.employee['last_name'] = name.last
+        self.employee['first_name'] = name.first
+        self.employee['middle_name'] = name.middle
+        self.employee.pop('name')
+        return self
+
+    def clean_annual_salary(self):
+        if 'annual_salary' in self.employee and self.employee['annual_salary']:
+            self.employee['annual_salary'] = self.employee['annual_salary']
+        return self
+
+    def clean_hourly_rate(self):
+        if 'hourly_rate' in self.employee and self.employee['hourly_rate']:
+            self.employee['hourly_rate'] = self.employee['hourly_rate']
+        return self
+
+    def clean(self):
+        return self.clean_name().clean_hourly_rate().clean_annual_salary()
+
+
+class EmployeesManager:
+
     def __init__(self):
         pass
 
@@ -37,30 +64,20 @@ class EmployeeManager:
 
     def employees(self, limit=None):
         if limit is None:
-            count = self.count()
-        else:
-            count = limit
-        logger.info(f'Total employees found: {count}')
+            limit = self.count()
+        logger.info('Total employees found: %d', limit)
 
-        r = self.query(params={'$limit': count})
+        r = self.query(params={'$limit': limit})
 
         if not r.status_code == 200:
             logger.critical('Data portal error: %s', r.content)
             raise ChicagoDataPortalError('Unable to get employees from portal.')
 
-        employees = r.json()
+        _employees = [EmployeeManager(employee).clean().employee for employee in r.json()]
 
-        logger.info(f'Retreived {len(employees)} employees from {settings.EMPLOYEE_URL}')
+        logger.info('Retreived %d employees from %s', len(_employees), settings.EMPLOYEE_URL)
 
-        return [self.clean(employee) for employee in employees]
-
-    def clean(self, employee):
-        name = HumanName(employee.get('name'))
-        employee['last_name'] = name.last
-        employee['first_name'] = name.first
-        employee['middle_name'] = name.middle
-        employee.pop('name')
-        return employee
+        return _employees
 
     def sync_employee(self, employee):
 
@@ -80,7 +97,7 @@ class EmployeeManager:
 
                 existing_employee.save()
 
-                logger.debug(f'Updating employee {existing_employee.__dict__}')
+                logger.debug('Updating employee %s', existing_employee.__dict__)
 
             except Employee.DoesNotExist as ex:
                 new_employee = Employee(**employee)
