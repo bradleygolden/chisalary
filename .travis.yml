@@ -4,6 +4,8 @@ python:
 
 install:
   - pip install -r requirements.txt
+  - pip install coveralls
+  - coverage run --source=api manage.py test api
 
 script:
   - python chisalary/manage.py test api -v 2
