@@ -222,3 +222,10 @@ class EmployeeAPITestCase(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 0)
+
+
+class EmployeeModelTestCase(TestCase):
+
+    def test_string_representation(self):
+        employee = Employee(**clean_test_employees[0])
+        self.assertEqual(str(employee), 'AZIZ ABDELMAJEID')
