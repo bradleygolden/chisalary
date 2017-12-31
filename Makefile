@@ -1,5 +1,5 @@
 run:
-	python chisalary/manage.py runserver
+	DEBUG='true' python chisalary/manage.py runserver
 
 clean:
 	find . -name \*.pyc -delete
