@@ -6,6 +6,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from .manager import EmployeeManager, EmployeesManager
 from .models import Employee
+from decimal import Decimal
 
 
 dirty_test_employees = [
@@ -52,7 +53,6 @@ clean_test_employees = [
             "typical_hours": 20
         },
     ]
-
 
 class EmployeeManagerTestCase(TestCase):
 

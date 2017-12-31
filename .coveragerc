@@ -1,5 +1,2 @@
 [run]
 omit = *migrations*
-
-[report]
-show_missing = True
